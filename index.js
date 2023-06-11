@@ -20,7 +20,7 @@ const verifyJWT = (req, res, next) => {
   // bearer token
   const token = authorization.split(' ')[1];
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN, (err, decoded) => {
     if (err) {
       return res.status(401).send({ error: true, message: 'unauthorized access' })
     }
@@ -48,7 +48,9 @@ async function run() {
     //database collection
     const usersCollection = client.db("skill-builder").collection("users");
     const classCollection = client.db("skill-builder").collection("classes");
-    const enrolledCollection = client.db("skill-builder").collection("enrolled");
+    const enrolledClassCollection = client.db("skill-builder").collection("enrolled");
+    const pendingClassCollection = client.db("skill-builder").collection("pending-classes");
+    const selectedClassCollection = client.db("skill-builder").collection("selected-classes");
 
 //create JWTtoken
 app.post('/jwt', (req, res) => {
