@@ -33,11 +33,21 @@ async function run() {
     const classCollection = client.db("skill-builder").collection("classes");
     const enrolledCollection = client.db("skill-builder").collection("enrolled");
 
+//create JWTtoken
+app.post('/jwt', (req, res) => {
+  const user = req.body;
+  const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '1h' })
+
+  res.send({ token })
+})
+
 //get users
 app.get('/users', async(req, res)=>{
     const result = await usersCollection.find().toArray();
       res.send(result);
 })
+
+
 //post users
 app.post('/users', async(req, res)=>{
   const user = req.body;
@@ -51,6 +61,8 @@ app.post('/users', async(req, res)=>{
       const result = await usersCollection.insertOne(user);
       res.send(result);
 })
+
+
 //get classes
 app.get('/classes', async(req, res)=>{
     const result = await classCollection.find().toArray();
