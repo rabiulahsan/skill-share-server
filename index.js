@@ -71,16 +71,7 @@ const verifyAdmin = async (req, res, next) => {
   next();
 }
 
-//verifyUser
-const verifyUser = async (req, res, next) => {
-  const email = req.decoded.email;
-  const query = { email: email }
-  const user = await usersCollection.findOne(query);
-  if (user?.role !== 'user') {
-    return res.status(403).send({ error: true, message: 'forbidden message' });
-  }
-  next();
-}
+
 //verifyInstrucror
 const verifyInstrucror = async (req, res, next) => {
   const email = req.decoded.email;
@@ -150,19 +141,25 @@ app.post('/selected', verifyJWT, async(req, res)=>{
 })
 
 //get selected classes
-app.get('/selected/:email', verifyJWT, async(req, res)=>{
-  const email = req.query.email;
-  if (!email) {
+app.get('/selected',verifyJWT, async(req, res)=>{
+  const userEmail = req.query.email;
+
+  if (!userEmail) {
     res.send([]);
   }
   const decodedEmail = req.decoded.email;
-  if (email !== decodedEmail) {
+  if (userEmail !== decodedEmail) {
     return res.status(403).send({ error: true, message: 'forbidden access' })
   }
-
-  const query = { email: email };
+let query={}
+if (req.query?.email) {
+      query = {
+        email: req.query.email,
+      };
+}
   const result = await selectedClassCollection.find(query).toArray();
   res.send(result);
+  
 })
 
 //delete selected class
