@@ -100,6 +100,20 @@ app.get('/users/admin/:email', verifyJWT, async (req, res) => {
   res.send(result);
 })
 
+//get instructors
+app.get('/users/instructor/:email', verifyJWT, async (req, res) => {
+  const email = req.params.email;
+
+  if (req.decoded.email !== email) {
+    res.send({ admin: false })
+  }
+
+  const query = { email: email }
+  const user = await usersCollection.findOne(query);
+  const result = { admin: user?.role === 'instructor' }
+  res.send(result);
+})
+
 //post users
 app.post('/users', async(req, res)=>{
   const user = req.body;
