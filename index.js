@@ -131,6 +131,7 @@ app.post('/users', async(req, res)=>{
       res.send(result);
 })
 
+//user dashboard 
 
 //post selected classes
 app.post('/selected', verifyJWT, async(req, res)=>{
@@ -170,12 +171,21 @@ app.delete('/selected/:id', verifyJWT, async (req, res)=>{
       res.send(result);
 })
 
-//get classes
+//get all classes
 app.get('/classes', async(req, res)=>{
     const result = await classCollection.find().toArray();
       res.send(result);
 })
 
+
+//instructor dashboard
+//post a new class
+
+app.post('/addclass', verifyJWT, verifyInstrucror, async(req, res)=>{
+  const newClass =req.body
+  const result = await classCollection.insertOne(newClass)
+  res.send(result)
+})
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
