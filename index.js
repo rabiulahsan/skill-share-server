@@ -131,6 +131,14 @@ app.post('/users', async(req, res)=>{
 })
 
 
+//post selected classes
+app.post('/selected',  async(req, res)=>{
+  const selectedClass =req.body
+  console.log(selectedClass);
+  const result = await selectedClassCollection.insertOne(selectedClass)
+  res.send(result)
+})
+
 //get classes
 app.get('/classes', async(req, res)=>{
     const result = await classCollection.find().toArray();
