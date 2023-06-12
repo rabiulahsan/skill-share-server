@@ -229,7 +229,7 @@ app.get("/allusers", verifyJWT, verifyAdmin, async(req, res)=>{
       res.send(result);
 })
 
-//update user role
+//update user role to instructor
 app.patch('/allusers/makeinstructor/:id', async(req, res)=>{
 const id = req.params.id;
       console.log(id);
@@ -244,6 +244,22 @@ const id = req.params.id;
       const result = await usersCollection.updateOne(filter, updateDoc);
       res.send(result);
 })
+
+//update user role to admin
+app.patch('/allusers/makeadmin/:id', async(req, res)=>{
+  const id = req.params.id;
+        console.log(id);
+        
+        const filter = { _id: new ObjectId(id) };
+        const updateDoc = {
+          $set: {
+            role: 'admin'
+          },
+        };
+  
+        const result = await usersCollection.updateOne(filter, updateDoc);
+        res.send(result);
+  })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
