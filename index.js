@@ -142,8 +142,9 @@ app.post('/selected', verifyJWT, async(req, res)=>{
 })
 
 //get selected classes
-app.get('/selected',verifyJWT, async(req, res)=>{
+app.get('/selected', verifyJWT, async(req, res)=>{
   const userEmail = req.query.email;
+console.log(userEmail);
 
   if (!userEmail) {
     res.send([]);
@@ -181,11 +182,40 @@ app.get('/classes', async(req, res)=>{
 //instructor dashboard
 //post a new class
 
-app.post('/addclass', verifyJWT, verifyInstrucror, async(req, res)=>{
+app.post('/classes', verifyJWT, verifyInstrucror, async(req, res)=>{
   const newClass =req.body
   const result = await classCollection.insertOne(newClass)
   res.send(result)
 })
+
+//get classes for instructor
+app.get('/instructorclasses', async(req, res)=>{
+  const instructorEmail = req.query.email;
+
+
+
+  // if (!instructorEmail) {
+  //   res.send([]);
+  // }
+  // const decodedEmail = req.decoded.email;
+  // if (instructorEmail !== decodedEmail) {
+  //   return res.status(403).send({ error: true, message: 'forbidden access' })
+  // }
+
+  let query={}
+  if (req.query?.email) {
+      query = {
+      email: req.query.email,
+    };
+}
+
+console.log(req.query.email);
+  const result = await classCollection.find(query).toArray();
+  res.send(result);
+  
+})
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
