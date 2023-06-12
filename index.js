@@ -223,6 +223,23 @@ app.get('/allclasses', verifyJWT, verifyAdmin, async(req, res)=>{
       res.send(result);
 })
 
+//update class status
+app.patch('/allclasses/:id', async(req, res)=>{
+  const id = req.params.id;
+        console.log(id);
+        console.log(req.body.status);
+        const filter = { _id: new ObjectId(id) };
+        const updateDoc = {
+          $set: {
+            status: req.body.status
+          }
+        };
+  
+        const result = await classCollection.updateOne(filter, updateDoc);
+        res.send(result);
+  })
+
+
 //get all users
 app.get("/allusers", verifyJWT, verifyAdmin, async(req, res)=>{
   const result = await usersCollection.find().toArray();
