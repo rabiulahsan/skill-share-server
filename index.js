@@ -215,6 +215,35 @@ console.log(req.query.email);
   
 })
 
+//admin dashboard
+//get api for all classes
+
+app.get('/allclasses', verifyJWT, verifyAdmin, async(req, res)=>{
+     const result = await classCollection.find().toArray();
+      res.send(result);
+})
+
+//get all users
+app.get("/allusers", verifyJWT, verifyAdmin, async(req, res)=>{
+  const result = await usersCollection.find().toArray();
+      res.send(result);
+})
+
+//update user role
+app.patch('/allusers/makeinstructor/:id', async(req, res)=>{
+const id = req.params.id;
+      console.log(id);
+      
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          role: 'instructor'
+        },
+      };
+
+      const result = await usersCollection.updateOne(filter, updateDoc);
+      res.send(result);
+})
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
