@@ -133,6 +133,29 @@ app.post('/users', async(req, res)=>{
 
 //user dashboard 
 
+//get enrolled classes
+app.get('/enrolled', verifyJWT, async(req, res)=>{
+  const userEmail = req.query.email;
+console.log(userEmail);
+
+  if (!userEmail) {
+    res.send([]);
+  }
+  const decodedEmail = req.decoded.email;
+  if (userEmail !== decodedEmail) {
+    return res.status(403).send({ error: true, message: 'forbidden access' })
+  }
+let query={}
+if (req.query?.email) {
+      query = {
+        email: req.query.email,
+      };
+}
+  const result = await enrolledClassCollection.find(query).toArray();
+  res.send(result);
+  
+})
+
 //post selected classes
 app.post('/selected', verifyJWT, async(req, res)=>{
   const selectedClass =req.body
