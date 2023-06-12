@@ -300,6 +300,20 @@ app.patch('/allusers/makeadmin/:id', async(req, res)=>{
     })
   })
 
+  //post payment details 
+  app.post('/payments', verifyJWT, async (req, res) => {
+    const payment = req.body;
+    const insertResult = await enrolledClassCollection.insertOne(payment);
+
+
+    const query = {_id: new ObjectId(req.body.selectedId)}
+    const deleteResult = await selectedClassCollection.deleteOne(query);
+    
+
+    res.send({ insertResult, deleteResult });
+    
+  })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
